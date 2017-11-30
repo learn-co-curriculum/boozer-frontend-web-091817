@@ -3,7 +3,7 @@ import CocktailsList from './CocktailsList';
 import CocktailsDetail from './CocktailsDetail';
 import CocktailsNew from './CocktailsNew';
 
-import { fetchCocktails, createCocktail } from './services/api';
+import { fetchCocktails, fetchCocktail, createCocktail } from './services/api';
 
 class CocktailsContainer extends Component {
   constructor() {
@@ -11,21 +11,18 @@ class CocktailsContainer extends Component {
 
     this.state = {
       cocktails: [],
-      selectedCocktail: {}
+      selectedCocktail: null
     };
   }
 
   componentDidMount() {
-    fetchCocktails().then(res =>
-      this.setState({ cocktails: res, selectedCocktail: res[0] })
-    );
+    fetchCocktails().then(res => this.setState({ cocktails: res }));
   }
 
   handleSelect = id => {
-    const newCocktail = this.state.cocktails.find(
-      cocktail => cocktail.id === id
-    );
-    this.setState({ selectedCocktail: newCocktail });
+    fetchCocktail(id).then(cocktail => {
+      this.setState({ selectedCocktail: cocktail });
+    });
   };
 
   handleCreateCocktail = cocktailInfo => {
@@ -38,12 +35,9 @@ class CocktailsContainer extends Component {
   render() {
     const { cocktails, selectedCocktail } = this.state;
     return (
-      <div className="ui grid container">
-        <div className="sixteen wide column">
-          <CocktailsNew handleCreateCocktail={this.handleCreateCocktail} />
-        </div>
+      <div className="ui grid">
         {/*  Master "List of Things" */}
-        <div className="four wide column">
+        <div className="three wide column">
           <CocktailsList
             handleSelect={this.handleSelect}
             cocktails={cocktails}
@@ -51,8 +45,15 @@ class CocktailsContainer extends Component {
         </div>
 
         {/*  Detail "One Thing"*/}
-        <div className="twelve wide column">
-          <CocktailsDetail cocktail={selectedCocktail} />
+        <div className="six wide column">
+          {selectedCocktail ? (
+            <CocktailsDetail cocktail={selectedCocktail} />
+          ) : (
+            <p> Select a cocktail from the list to see more info</p>
+          )}
+        </div>
+        <div className="seven wide column">
+          <CocktailsNew handleCreateCocktail={this.handleCreateCocktail} />
         </div>
       </div>
     );

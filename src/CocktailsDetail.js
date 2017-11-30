@@ -1,11 +1,23 @@
 import React from 'react';
 
-const CocktailsDetail = props => {
+const CocktailsDetail = ({ cocktail }) => {
+  console.log(cocktail);
   return (
     <div>
-      <h1>{props.cocktail.name}</h1>
-      <h3>{props.cocktail.description}</h3>
-      <p>{props.cocktail.instructions}</p>
+      <h1>{cocktail.name}</h1>
+      <h3>{cocktail.description}</h3>
+      <p>{cocktail.instructions}</p>
+      <h2>Ingredients</h2>
+      <div>
+        {cocktail.proportions.map((proportion, i) => (
+          <p key={i}>
+            - <span style={{ fontWeight: 'bold' }}>
+              {proportion.amount}
+            </span>{' '}
+            {proportion.ingredient_name}
+          </p>
+        ))}
+      </div>
     </div>
   );
 };

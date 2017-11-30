@@ -10,6 +10,12 @@ export function fetchCocktails() {
   );
 }
 
+export function fetchCocktail(id) {
+  return fetch(`http://localhost:3001/api/v1/cocktails/${id}`).then(res =>
+    res.json()
+  );
+}
+
 export function createCocktail(data) {
   return fetch(`http://localhost:3001/api/v1/cocktails`, {
     method: 'POST',
